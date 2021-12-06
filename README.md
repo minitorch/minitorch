@@ -10,9 +10,9 @@ concepts underlying deep learning systems.  It is a pure Python
 re-implementation of the [Torch](http://www.pytorch.org) API
 designed to be simple, easy-to-read, tested, and incremental. The
 final library can run Torch code. The project was developed for the
-course `Machine Learning Engineering` at Cornell Tech.
+course 'Machine Learning Engineering' at Cornell Tech.
 
-To get started, first read `setup` and `contributing` to
+To get started, first read [setup](http://minitorch.github.io/setup) to
 build your workspace.  Then follow through each of the modules to the
 right. Minimal computational resources are required.
 Module starting code is available on GitHub, and each proceeds
