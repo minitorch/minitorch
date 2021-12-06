@@ -1,0 +1,12 @@
+numpy == 1.19.1
+numba == 0.49
+pytest == 6.0.1
+pytest-env
+pytest-runner == 5.2
+hypothesis == 4.38
+flake8==3.8.3
+black==19.10b0
+colorama==0.4.3
+pep8-naming==0.11.1
+darglint==1.8.0
+tbb
