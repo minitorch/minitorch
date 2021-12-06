@@ -2,6 +2,10 @@
 
 <img src="http://minitorch.github.io/_images/minitorch.svg">
 
+This repo is the full student code for minitorch. It is designed as a 
+single repo that can be completed part by part following the guide book. 
+It uses GitHub CI to run the tests for each module. 
+
 * [Full Guide](http://minitorch.github.io) 
 
 MiniTorch is a *diy teaching library*
