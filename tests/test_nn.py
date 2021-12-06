@@ -9,20 +9,17 @@ import pytest
 def test_avg(t):
     out = minitorch.avgpool2d(t, (2, 2))
     assert_close(
-        out[0, 0, 0, 0],
-         sum([t[0, 0, i, j] for i in range(2) for j in range(2)]) / 4.0
+        out[0, 0, 0, 0], sum([t[0, 0, i, j] for i in range(2) for j in range(2)]) / 4.0
     )
 
     out = minitorch.avgpool2d(t, (2, 1))
     assert_close(
-        out[0, 0, 0, 0],
-        sum([t[0, 0, i, j] for i in range(2) for j in range(1)]) / 2.0
+        out[0, 0, 0, 0], sum([t[0, 0, i, j] for i in range(2) for j in range(1)]) / 2.0
     )
 
     out = minitorch.avgpool2d(t, (1, 2))
     assert_close(
-        out[0, 0, 0, 0],
-        sum([t[0, 0, i, j] for i in range(1) for j in range(2)]) / 2.0
+        out[0, 0, 0, 0], sum([t[0, 0, i, j] for i in range(1) for j in range(2)]) / 2.0
     )
     minitorch.grad_check(lambda t: minitorch.avgpool2d(t, (2, 2)), t)
 

@@ -83,7 +83,9 @@ def render_run_sentiment_interface():
         "Learning rate", value=0.01, step=0.001, format="%.3f"
     )
     n_training_data = col1.number_input("N datapoints from training data", value=450)
-    n_validation_data = col2.number_input("N datapoints from validation data", value=100)
+    n_validation_data = col2.number_input(
+        "N datapoints from validation data", value=100
+    )
     batch_size = st.number_input("Batch size", value=10)
 
     if st.button("Train model"):
