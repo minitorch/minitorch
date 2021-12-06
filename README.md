@@ -1,4 +1,3 @@
-# minitorch
 
 
 <img src="http://minitorch.github.io/_images/minitorch.svg">
