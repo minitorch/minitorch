@@ -88,11 +88,13 @@ def make_tensor_backend(tensor_ops, is_cuda=False):
         class Add(Function):
             @staticmethod
             def forward(ctx, t1, t2):
+                ctx.save_for_backward(t1, t2)
                 return add_zip(t1, t2)
 
             @staticmethod
             def backward(ctx, grad_output):
-                return grad_output, grad_output
+                t1, t2 = ctx.saved_values
+                return t1.expand(grad_output), t2.expand(grad_output)
 
         class Mul(Function):
             @staticmethod
