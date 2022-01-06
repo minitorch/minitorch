@@ -188,7 +188,7 @@ class History:
             d_output : a derivative with respect to this variable
 
         Returns:
-            list of numbers : a derivative with respect to `inputs`
+            list of (`Variable`, number) : derivatives with respect to `inputs`
         """
         # TODO: Implement for Task 1.4.
         raise NotImplementedError('Need to implement for Task 1.4')
