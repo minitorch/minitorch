@@ -4,6 +4,6 @@ streamlit==0.75.0
 watchdog==1.0.2
 plotly==4.14.3
 python-mnist
-torch==1.6.0
+torch==1.7.0
 datasets==1.15.1
 embeddings==0.0.8
