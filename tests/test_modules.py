@@ -1,28 +1,39 @@
-from hypothesis import given
-from hypothesis.strategies import integers, lists
-from .strategies import scalars
 import random
+from typing import List
+
+from hypothesis import given
+from hypothesis.strategies import DrawFn, composite, floats, integers, lists
+
 import minitorch
+from minitorch import Parameter, Scalar
+
+
+@composite
+def scalars(
+    draw: DrawFn, min_value: float = -100000, max_value: float = 100000
+) -> Scalar:
+    val = draw(floats(min_value=min_value, max_value=max_value))
+    return minitorch.Scalar(val)
 
 
 class Network(minitorch.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.layer = ScalarLinear(2, 1)
 
 
 class Network2(minitorch.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.layer1 = ScalarLinear(2, 2)
         self.layer2 = ScalarLinear(2, 1)
 
 
 class ScalarLinear(minitorch.Module):
-    def __init__(self, in_size, out_size):
+    def __init__(self, in_size: int, out_size: int) -> None:
         super().__init__()
-        self.weights = []
-        self.bias = []
+        self.weights: List[List[Parameter]] = []
+        self.bias: List[Parameter] = []
         for i in range(in_size):
             self.weights.append([])
             for j in range(out_size):
@@ -38,7 +49,7 @@ class ScalarLinear(minitorch.Module):
                 )
             )
 
-    def forward(self, inputs):
+    def forward(self, inputs: List[Scalar]) -> List[Scalar]:
         y = [b.value for b in self.bias]
         for i, x in enumerate(inputs):
             for j in range(len(y)):
@@ -47,7 +58,7 @@ class ScalarLinear(minitorch.Module):
 
 
 @given(lists(scalars(), max_size=10), integers(min_value=5, max_value=20))
-def test_linear(inputs, out_size):
+def test_linear(inputs: List[Scalar], out_size: int) -> None:
     lin = ScalarLinear(len(inputs), out_size)
     mid = lin.forward(inputs)
     lin2 = ScalarLinear(out_size, 1)
@@ -69,7 +80,7 @@ def test_linear(inputs, out_size):
 #     minitorch.derivative_check(check, *(inputs + bias))
 
 
-def test_nn_size():
+def test_nn_size() -> None:
     model = Network2()
     assert len(model.parameters()) == (
         len(model.layer1.parameters()) + len(model.layer2.parameters())

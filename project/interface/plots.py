@@ -67,7 +67,9 @@ def animate(self, models, names):
         dict(active=0, currentvalue={"prefix": "b="}, pad={"t": 50}, steps=steps)
     ]
 
-    fig = go.Figure(data=background + [points],)
+    fig = go.Figure(
+        data=background + [points],
+    )
     fig.update_layout(sliders=sliders)
 
     fig.update_layout(
@@ -146,11 +148,30 @@ def plot(graph, model=None, name=""):
     plot_out(graph, model, name).show()
 
 
-def plot_function(title, fn, arange=[(i / 5.0) - 4.0 for i in range(0, 40)]):
+def plot_function(title, fn, arange=[(i / 10.0) - 5 for i in range(0, 100)], fn2=None):
     ys = [fn(x) for x in arange]
+    scatters = []
     scatter = go.Scatter(x=arange, y=ys)
+    scatters.append(scatter)
+    if fn2 is not None:
+        ys = [fn2(x) for x in arange]
+        scatter2 = go.Scatter(x=arange, y=ys)
+        scatters.append(scatter2)
+    fig = go.Figure(scatters)
+    fig.update_layout(template="simple_white", title=title)
+
+    return fig.show()
+
+
+def plot_function3D(title, fn, arange=[(i / 5.0) - 4.0 for i in range(0, 40)]):
+
+    xs = [((x / 10.0) - 5.0 + 1e-5) for x in range(1, 100)]
+    ys = [((x / 10.0) - 5.0 + 1e-5) for x in range(1, 100)]
+    zs = [[fn(x, y) for x in xs] for y in ys]
+
+    scatter = go.Surface(x=xs, y=ys, z=zs)
 
     fig = go.Figure(scatter)
     fig.update_layout(template="simple_white", title=title)
 
-    fig.show()
+    return fig.show()

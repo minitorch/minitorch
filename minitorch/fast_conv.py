@@ -1,13 +1,20 @@
+from typing import Tuple
+
 import numpy as np
-from .tensor_data import (
-    to_index,
-    index_to_position,
-    broadcast_index,
-    MAX_DIMS,
-)
-from .tensor_functions import Function
 from numba import njit, prange
 
+from .autodiff import Context
+from .tensor import Tensor
+from .tensor_data import (
+    MAX_DIMS,
+    Index,
+    Shape,
+    Strides,
+    broadcast_index,
+    index_to_position,
+    to_index,
+)
+from .tensor_functions import Function
 
 # This code will JIT compile fast versions your tensor_data functions.
 # If you get an error, read the docs for NUMBA as to what is allowed
@@ -17,20 +24,19 @@ index_to_position = njit(inline="always")(index_to_position)
 broadcast_index = njit(inline="always")(broadcast_index)
 
 
-@njit(parallel=True)
-def tensor_conv1d(
-    out,
-    out_shape,
-    out_strides,
-    out_size,
-    input,
-    input_shape,
-    input_strides,
-    weight,
-    weight_shape,
-    weight_strides,
-    reverse,
-):
+def _tensor_conv1d(
+    out: Tensor,
+    out_shape: Shape,
+    out_strides: Strides,
+    out_size: int,
+    input: Tensor,
+    input_shape: Shape,
+    input_strides: Strides,
+    weight: Tensor,
+    weight_shape: Shape,
+    weight_strides: Strides,
+    reverse: bool,
+) -> None:
     """
     1D Convolution implementation.
 
@@ -50,16 +56,16 @@ def tensor_conv1d(
     (See diagrams)
 
     Args:
-        out (array): storage for `out` tensor.
-        out_shape (array): shape for `out` tensor.
-        out_strides (array): strides for `out` tensor.
+        out (Storage): storage for `out` tensor.
+        out_shape (Shape): shape for `out` tensor.
+        out_strides (Strides): strides for `out` tensor.
         out_size (int): size of the `out` tensor.
-        input (array): storage for `input` tensor.
-        input_shape (array): shape for `input` tensor.
-        input_strides (array): strides for `input` tensor.
-        weight (array): storage for `input` tensor.
-        weight_shape (array): shape for `input` tensor.
-        weight_strides (array): strides for `input` tensor.
+        input (Storage): storage for `input` tensor.
+        input_shape (Shape): shape for `input` tensor.
+        input_strides (Strides): strides for `input` tensor.
+        weight (Storage): storage for `input` tensor.
+        weight_shape (Shape): shape for `input` tensor.
+        weight_strides (Strides): strides for `input` tensor.
         reverse (bool): anchor weight at left or right
     """
     batch_, out_channels, out_width = out_shape
@@ -78,19 +84,22 @@ def tensor_conv1d(
     raise NotImplementedError('Need to implement for Task 4.1')
 
 
+tensor_conv1d = njit(parallel=True)(_tensor_conv1d)
+
+
 class Conv1dFun(Function):
     @staticmethod
-    def forward(ctx, input, weight):
+    def forward(ctx: Context, input: Tensor, weight: Tensor) -> Tensor:
         """
         Compute a 1D Convolution
 
         Args:
             ctx : Context
-            input (:class:`Tensor`) : batch x in_channel x h x w
-            weight (:class:`Tensor`) : out_channel x in_channel x kh x kw
+            input : batch x in_channel x h x w
+            weight : out_channel x in_channel x kh x kw
 
         Returns:
-            (:class:`Tensor`) : batch x out_channel x h x w
+            batch x out_channel x h x w
         """
         ctx.save_for_backward(input, weight)
         batch, in_channels, w = input.shape
@@ -105,7 +114,7 @@ class Conv1dFun(Function):
         return output
 
     @staticmethod
-    def backward(ctx, grad_output):
+    def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         input, weight = ctx.saved_values
         batch, in_channels, w = input.shape
         out_channels, in_channels, kw = weight.shape
@@ -136,20 +145,19 @@ class Conv1dFun(Function):
 conv1d = Conv1dFun.apply
 
 
-@njit(parallel=True, fastmath=True)
-def tensor_conv2d(
-    out,
-    out_shape,
-    out_strides,
-    out_size,
-    input,
-    input_shape,
-    input_strides,
-    weight,
-    weight_shape,
-    weight_strides,
-    reverse,
-):
+def _tensor_conv2d(
+    out: Tensor,
+    out_shape: Shape,
+    out_strides: Strides,
+    out_size: int,
+    input: Tensor,
+    input_shape: Shape,
+    input_strides: Strides,
+    weight: Tensor,
+    weight_shape: Shape,
+    weight_strides: Strides,
+    reverse: bool,
+) -> None:
     """
     2D Convolution implementation.
 
@@ -170,16 +178,16 @@ def tensor_conv2d(
 
 
     Args:
-        out (array): storage for `out` tensor.
-        out_shape (array): shape for `out` tensor.
-        out_strides (array): strides for `out` tensor.
+        out (Storage): storage for `out` tensor.
+        out_shape (Shape): shape for `out` tensor.
+        out_strides (Strides): strides for `out` tensor.
         out_size (int): size of the `out` tensor.
-        input (array): storage for `input` tensor.
-        input_shape (array): shape for `input` tensor.
-        input_strides (array): strides for `input` tensor.
-        weight (array): storage for `input` tensor.
-        weight_shape (array): shape for `input` tensor.
-        weight_strides (array): strides for `input` tensor.
+        input (Storage): storage for `input` tensor.
+        input_shape (Shape): shape for `input` tensor.
+        input_strides (Strides): strides for `input` tensor.
+        weight (Storage): storage for `input` tensor.
+        weight_shape (Shape): shape for `input` tensor.
+        weight_strides (Strides): strides for `input` tensor.
         reverse (bool): anchor weight at top-left or bottom-right
     """
     batch_, out_channels, _, _ = out_shape
@@ -202,16 +210,19 @@ def tensor_conv2d(
     raise NotImplementedError('Need to implement for Task 4.2')
 
 
+tensor_conv2d = njit(parallel=True, fastmath=True)(_tensor_conv2d)
+
+
 class Conv2dFun(Function):
     @staticmethod
-    def forward(ctx, input, weight):
+    def forward(ctx: Context, input: Tensor, weight: Tensor) -> Tensor:
         """
         Compute a 2D Convolution
 
         Args:
             ctx : Context
-            input (:class:`Tensor`) : batch x in_channel x h x w
-            weight (:class:`Tensor`) : out_channel x in_channel x kh x kw
+            input : batch x in_channel x h x w
+            weight  : out_channel x in_channel x kh x kw
 
         Returns:
             (:class:`Tensor`) : batch x out_channel x h x w
@@ -227,7 +238,7 @@ class Conv2dFun(Function):
         return output
 
     @staticmethod
-    def backward(ctx, grad_output):
+    def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         input, weight = ctx.saved_values
         batch, in_channels, h, w = input.shape
         out_channels, in_channels, kh, kw = weight.shape

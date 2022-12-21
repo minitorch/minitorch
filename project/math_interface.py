@@ -1,10 +1,11 @@
-import streamlit as st
+import graph_builder
 import networkx as nx
+import plotly.graph_objects as go
+import streamlit as st
+from interface.streamlit_utils import render_function
+
 import minitorch
 from minitorch import MathTest, MathTestVariable
-import plotly.graph_objects as go
-import graph_builder
-from interface.streamlit_utils import render_function
 
 MyModule = None
 minitorch
@@ -15,9 +16,9 @@ def render_math_sandbox(use_scalar=False, use_tensor=False):
     st.write("Visualization of the mathematical tests run on the underlying code.")
 
     if use_scalar:
-        one, two, red = MathTestVariable._tests()
+        one, two, red = MathTestVariable._comp_testing()
     else:
-        one, two, red = MathTest._tests()
+        one, two, red = MathTest._comp_testing()
     f_type = st.selectbox("Function Type", ["One Arg", "Two Arg", "Reduce"])
     select = {"One Arg": one, "Two Arg": two, "Reduce": red}
 

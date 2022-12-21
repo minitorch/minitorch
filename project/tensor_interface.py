@@ -1,15 +1,16 @@
-from minitorch.tensor_data import TensorData
-from project.interface.streamlit_utils import render_function
-import streamlit as st
-from minitorch import index_to_position, operators, to_index, Tensor, TensorFunctions
-from show_tensor import tensor_figure
 import numpy as np
 import plotly.graph_objects as go
+import streamlit as st
+from project.interface.streamlit_utils import render_function
+from show_tensor import tensor_figure
+
+from minitorch import SimpleBackend, Tensor, index_to_position, operators, to_index
+from minitorch.tensor_data import TensorData
 
 
 def st_select_index(tensor_shape, n_cols=3):
     out_index = [0] * len(tensor_shape)
-    cols = st.beta_columns(n_cols)
+    cols = st.columns(n_cols)
     for idx, dim in enumerate(tensor_shape):
         out_index[idx] = cols[idx % n_cols].number_input(
             f"Dimension {idx} index:", value=0, min_value=0, max_value=dim - 1
@@ -131,9 +132,9 @@ def interface_visualize_tensor(tensor: Tensor, hide_function_defs: bool):
 
 def interface_index_to_position(tensor: Tensor, hide_function_defs: bool):
     if not hide_function_defs:
-        with st.beta_expander("Show function definition"):
+        with st.expander("Show function definition"):
             render_function(index_to_position)
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     idx = eval(
         col1.text_input(
             "Multi-dimensional index", value=str([0] * len(tensor._tensor.strides))
@@ -147,7 +148,7 @@ def interface_index_to_position(tensor: Tensor, hide_function_defs: bool):
 
 def interface_to_index(tensor: Tensor, hide_function_defs: bool):
     if not hide_function_defs:
-        with st.beta_expander("Show function definition"):
+        with st.expander("Show function definition"):
             render_function(to_index)
     tensor_shape = tensor.shape
     st.write(f"**Tensor strides:** {tensor._tensor.strides}")
@@ -172,7 +173,7 @@ def interface_strides(tensor: Tensor, hide_function_defs: bool):
 
     st.write("**Try it out:**")
     out_index = st_select_index(tensor.shape)
-    cols = st.beta_columns(len(strides))
+    cols = st.columns(len(strides))
     for dim, stride in enumerate(strides):
         cols[dim].write(f"*moves {stride} positions in storage*")
     st_visualize_tensor(tensor, out_index, strides, show_value=True)
@@ -180,7 +181,7 @@ def interface_strides(tensor: Tensor, hide_function_defs: bool):
 
 def interface_permute(tensor: Tensor, hide_function_defs: bool):
     if not hide_function_defs:
-        with st.beta_expander("Show function definition"):
+        with st.expander("Show function definition"):
             render_function(TensorData.permute)
 
     st.write(f"**Tensor strides:** {tensor._tensor.strides}")
@@ -219,7 +220,7 @@ def render_tensor_sandbox(hide_function_defs: bool):
     st.write("**Define your tensor**")
     # Consistent random number generator
     rng = np.random.RandomState(42)
-    # col1, col2 = st.beta_columns(2)
+    # col1, col2 = st.columns(2)
     tensor_shape = st_eval_error_message(
         st.text_input("Tensor shape", value="(2, 2, 2)"),
         "Tensor shape must be defined as an in-line tuple, i.e. (2, 2, 2)",
@@ -238,7 +239,7 @@ def render_tensor_sandbox(hide_function_defs: bool):
         )
 
     try:
-        test_tensor = Tensor.make(tensor_data, tensor_shape, backend=TensorFunctions)
+        test_tensor = Tensor.make(tensor_data, tensor_shape, backend=SimpleBackend)
     except AssertionError as e:
         storage_size = len(tensor_data)
         if tensor_size != storage_size:

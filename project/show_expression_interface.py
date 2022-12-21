@@ -1,18 +1,19 @@
-import streamlit as st
 import graph_builder
 import networkx as nx
+import streamlit as st
+from streamlit_ace import st_ace
 
 
 def render_show_expression(tensor=False):
 
     if tensor:
         st.text("Build an expression of tensors x, y, and z. (All the same shape)")
-        code = st.text_area(
-            label="Expression of x,y,z", value="(x * x) * y + 10.0 * x.sum()"
+        code = st_ace(
+            language="python", height=300, value="(x * x) * y + 10.0 * x.sum()"
         )
         out = graph_builder.build_tensor_expression(code)
     else:
-        code = st.text_area(label="Expression of x,y,z", value="(x * x) * y + 10.0 * x")
+        code = st_ace(language="python", height=300, value="(x * x) * y + 10.0 * x")
         out = graph_builder.build_expression(code)
 
     G = graph_builder.GraphBuilder().run(out)

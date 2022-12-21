@@ -1,6 +1,7 @@
-import minitorch.fast_ops
-import minitorch
 from numba import njit
+
+import minitorch
+import minitorch.fast_ops
 
 # MAP
 print("MAP")

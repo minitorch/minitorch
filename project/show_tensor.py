@@ -93,7 +93,10 @@ def plot_map():
         ayref="y",
         showarrow=True,
         arrowhead=3,
-        font=dict(size=15, color="black",),
+        font=dict(
+            size=15,
+            color="black",
+        ),
     )
     fig.add_annotation(
         x=4,
@@ -106,7 +109,10 @@ def plot_map():
         ayref="y",
         showarrow=True,
         arrowhead=3,
-        font=dict(size=15, color="black",),
+        font=dict(
+            size=15,
+            color="black",
+        ),
     )
     fig.show()
 
@@ -162,7 +168,10 @@ def plot_zip():
         ayref="y",
         showarrow=True,
         arrowhead=3,
-        font=dict(size=15, color="black",),
+        font=dict(
+            size=15,
+            color="black",
+        ),
     )
     fig.add_annotation(
         x=8,
@@ -175,7 +184,10 @@ def plot_zip():
         ayref="y",
         showarrow=True,
         arrowhead=3,
-        font=dict(size=15, color="black",),
+        font=dict(
+            size=15,
+            color="black",
+        ),
     )
     fig.show()
 
@@ -225,7 +237,10 @@ def plot_reduce():
         ayref="y",
         showarrow=True,
         arrowhead=3,
-        font=dict(size=15, color="black",),
+        font=dict(
+            size=15,
+            color="black",
+        ),
     )
     fig.add_annotation(
         x=1,
@@ -238,7 +253,10 @@ def plot_reduce():
         ayref="y",
         showarrow=True,
         arrowhead=3,
-        font=dict(size=15, color="black",),
+        font=dict(
+            size=15,
+            color="black",
+        ),
     )
     fig.add_annotation(
         x=3.5,
@@ -251,7 +269,10 @@ def plot_reduce():
         ayref="y",
         showarrow=True,
         arrowhead=3,
-        font=dict(size=15, color="black",),
+        font=dict(
+            size=15,
+            color="black",
+        ),
     )
     fig.show()
 

@@ -5,6 +5,7 @@ Be sure you have the extra requirements installed.
 """
 
 import networkx as nx
+
 import minitorch
 
 
@@ -24,7 +25,7 @@ class GraphBuilder:
         self.intermediates = {}
 
     def get_name(self, x):
-        if not isinstance(x, minitorch.Variable):
+        if not isinstance(x, minitorch.Scalar):
             return "constant %s" % (x,)
         elif len(x.name) > 15:
             if x.name in self.intermediates:
@@ -59,7 +60,7 @@ class GraphBuilder:
                     G.add_edge(self.get_name(input), op, f"{i}")
 
                 for input in cur.history.inputs:
-                    if not isinstance(input, minitorch.Variable):
+                    if not isinstance(input, minitorch.Scalar):
                         continue
 
                     seen = False
@@ -71,8 +72,9 @@ class GraphBuilder:
         return G
 
 
-def make_graph(y):
+def make_graph(y, lr=False):
     G = GraphBuilder().run(y)
-    # G.graph["graph"] = {"rankdir": "LR"}
+    if lr:
+        G.graph["graph"] = {"rankdir": "LR"}
     output_graphviz_svg = nx.nx_pydot.to_pydot(G).create_svg()
     return output_graphviz_svg

@@ -2,8 +2,9 @@
 Be sure you have minitorch installed in you Virtual Env.
 >>> pip install -Ue .
 """
-import minitorch
 import random
+
+import minitorch
 
 
 class Network(minitorch.Module):

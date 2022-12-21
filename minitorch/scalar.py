@@ -1,322 +1,213 @@
-from .autodiff import FunctionBase, Variable, History
-from . import operators
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any, Iterable, Optional, Sequence, Tuple, Type, Union
+
 import numpy as np
 
+from .autodiff import Context, Variable, backpropagate, central_difference
+from .scalar_functions import (
+    EQ,
+    LT,
+    Add,
+    Exp,
+    Inv,
+    Log,
+    Mul,
+    Neg,
+    ReLU,
+    ScalarFunction,
+    Sigmoid,
+)
 
-# ## Task 1.1
-# Central Difference calculation
+ScalarLike = Union[float, int, "Scalar"]
 
 
-def central_difference(f, *vals, arg=0, epsilon=1e-6):
-    r"""
-    Computes an approximation to the derivative of `f` with respect to one arg.
-
-    See :doc:`derivative` or https://en.wikipedia.org/wiki/Finite_difference for more details.
-
-    Args:
-        f : arbitrary function from n-scalar args to one value
-        *vals (list of floats): n-float values :math:`x_0 \ldots x_{n-1}`
-        arg (int): the number :math:`i` of the arg to compute the derivative
-        epsilon (float): a small constant
-
-    Returns:
-        float : An approximation of :math:`f'_i(x_0, \ldots, x_{n-1})`
+@dataclass
+class ScalarHistory:
     """
-    # TODO: Implement for Task 1.1.
-    raise NotImplementedError('Need to implement for Task 1.1')
+    `ScalarHistory` stores the history of `Function` operations that was
+    used to construct the current Variable.
+
+    Attributes:
+        last_fn : The last Function that was called.
+        ctx : The context for that Function.
+        inputs : The inputs that were given when `last_fn.forward` was called.
+
+    """
+
+    last_fn: Optional[Type[ScalarFunction]] = None
+    ctx: Optional[Context] = None
+    inputs: Sequence[Scalar] = ()
 
 
 # ## Task 1.2 and 1.4
 # Scalar Forward and Backward
 
+_var_count = 0
 
-class Scalar(Variable):
+
+class Scalar:
     """
     A reimplementation of scalar values for autodifferentiation
-    tracking.  Scalar Variables behave as close as possible to standard
+    tracking. Scalar Variables behave as close as possible to standard
     Python numbers while also tracking the operations that led to the
     number's creation. They can only be manipulated by
-    :class:`ScalarFunction`.
-
-    Attributes:
-        data (float): The wrapped scalar value.
+    `ScalarFunction`.
     """
 
-    def __init__(self, v, back=History(), name=None):
-        super().__init__(back, name=name)
-        self.data = float(v)
+    history: Optional[ScalarHistory]
+    derivative: Optional[float]
+    data: float
+    unique_id: int
+    name: str
 
-    def __repr__(self):
+    def __init__(
+        self,
+        v: float,
+        back: ScalarHistory = ScalarHistory(),
+        name: Optional[str] = None,
+    ):
+        global _var_count
+        _var_count += 1
+        self.unique_id = _var_count
+        self.data = float(v)
+        self.history = back
+        self.derivative = None
+        if name is not None:
+            self.name = name
+        else:
+            self.name = str(self.unique_id)
+
+    def __repr__(self) -> str:
         return "Scalar(%f)" % self.data
 
-    def __mul__(self, b):
+    def __mul__(self, b: ScalarLike) -> Scalar:
         return Mul.apply(self, b)
 
-    def __truediv__(self, b):
+    def __truediv__(self, b: ScalarLike) -> Scalar:
         return Mul.apply(self, Inv.apply(b))
 
-    def __rtruediv__(self, b):
+    def __rtruediv__(self, b: ScalarLike) -> Scalar:
         return Mul.apply(b, Inv.apply(self))
 
-    def __add__(self, b):
+    def __add__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.data)
 
-    def __lt__(self, b):
+    def __lt__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def __gt__(self, b):
+    def __gt__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def __eq__(self, b):
+    def __eq__(self, b: ScalarLike) -> Scalar:  # type: ignore[override]
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def __sub__(self, b):
+    def __sub__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def __neg__(self):
+    def __neg__(self) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def log(self):
+    def __radd__(self, b: ScalarLike) -> Scalar:
+        return self + b
+
+    def __rmul__(self, b: ScalarLike) -> Scalar:
+        return self * b
+
+    def log(self) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def exp(self):
+    def exp(self) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def sigmoid(self):
+    def sigmoid(self) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def relu(self):
+    def relu(self) -> Scalar:
         # TODO: Implement for Task 1.2.
         raise NotImplementedError('Need to implement for Task 1.2')
 
-    def get_data(self):
-        "Returns the raw float value"
-        return self.data
+    # Variable elements for backprop
 
-
-class ScalarFunction(FunctionBase):
-    """
-    A wrapper for a mathematical function that processes and produces
-    Scalar variables.
-
-    This is a static class and is never instantiated. We use `class`
-    here to group together the `forward` and `backward` code.
-    """
-
-    @staticmethod
-    def forward(ctx, *inputs):
-        r"""
-        Forward call, compute :math:`f(x_0 \ldots x_{n-1})`.
+    def accumulate_derivative(self, x: Any) -> None:
+        """
+        Add `val` to the the derivative accumulated on this variable.
+        Should only be called during autodifferentiation on leaf variables.
 
         Args:
-            ctx (:class:`Context`): A container object to save
-                                    any information that may be needed
-                                    for the call to backward.
-            *inputs (list of floats): n-float values :math:`x_0 \ldots x_{n-1}`.
-
-        Should return float the computation of the function :math:`f`.
+            x: value to be accumulated
         """
-        pass  # pragma: no cover
+        assert self.is_leaf(), "Only leaf variables can have derivatives."
+        if self.derivative is None:
+            self.derivative = 0.0
+        self.derivative += x
 
-    @staticmethod
-    def backward(ctx, d_out):
-        r"""
-        Backward call, computes :math:`f'_{x_i}(x_0 \ldots x_{n-1}) \times d_{out}`.
+    def is_leaf(self) -> bool:
+        "True if this variable created by the user (no `last_fn`)"
+        return self.history is not None and self.history.last_fn is None
+
+    def is_constant(self) -> bool:
+        return self.history is None
+
+    @property
+    def parents(self) -> Iterable[Variable]:
+        assert self.history is not None
+        return self.history.inputs
+
+    def chain_rule(self, d_output: Any) -> Iterable[Tuple[Variable, Any]]:
+        h = self.history
+        assert h is not None
+        assert h.last_fn is not None
+        assert h.ctx is not None
+
+        # TODO: Implement for Task 1.3.
+        raise NotImplementedError('Need to implement for Task 1.3')
+
+    def backward(self, d_output: Optional[float] = None) -> None:
+        """
+        Calls autodiff to fill in the derivatives for the history of this object.
 
         Args:
-            ctx (Context): A container object holding any information saved during in the corresponding `forward` call.
-            d_out (float): :math:`d_out` term in the chain rule.
-
-        Should return the computation of the derivative function
-        :math:`f'_{x_i}` for each input :math:`x_i` times `d_out`.
-
+            d_output (number, opt): starting derivative to backpropagate through the model
+                                   (typically left out, and assumed to be 1.0).
         """
-        pass  # pragma: no cover
-
-    # Checks.
-    variable = Scalar
-    data_type = float
-
-    @staticmethod
-    def data(a):
-        return a
+        if d_output is None:
+            d_output = 1.0
+        backpropagate(self, d_output)
 
 
-# Examples
-class Add(ScalarFunction):
-    "Addition function :math:`f(x, y) = x + y`"
-
-    @staticmethod
-    def forward(ctx, a, b):
-        return a + b
-
-    @staticmethod
-    def backward(ctx, d_output):
-        return d_output, d_output
-
-
-class Log(ScalarFunction):
-    "Log function :math:`f(x) = log(x)`"
-
-    @staticmethod
-    def forward(ctx, a):
-        ctx.save_for_backward(a)
-        return operators.log(a)
-
-    @staticmethod
-    def backward(ctx, d_output):
-        a = ctx.saved_values
-        return operators.log_back(a, d_output)
-
-
-# To implement.
-
-
-class Mul(ScalarFunction):
-    "Multiplication function"
-
-    @staticmethod
-    def forward(ctx, a, b):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-class Inv(ScalarFunction):
-    "Inverse function"
-
-    @staticmethod
-    def forward(ctx, a):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-class Neg(ScalarFunction):
-    "Negation function"
-
-    @staticmethod
-    def forward(ctx, a):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-class Sigmoid(ScalarFunction):
-    "Sigmoid function"
-
-    @staticmethod
-    def forward(ctx, a):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-class ReLU(ScalarFunction):
-    "ReLU function"
-
-    @staticmethod
-    def forward(ctx, a):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-class Exp(ScalarFunction):
-    "Exp function"
-
-    @staticmethod
-    def forward(ctx, a):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-class LT(ScalarFunction):
-    "Less-than function :math:`f(x) =` 1.0 if x is less than y else 0.0"
-
-    @staticmethod
-    def forward(ctx, a, b):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-class EQ(ScalarFunction):
-    "Equal function :math:`f(x) =` 1.0 if x is equal to y else 0.0"
-
-    @staticmethod
-    def forward(ctx, a, b):
-        # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
-
-    @staticmethod
-    def backward(ctx, d_output):
-        # TODO: Implement for Task 1.4.
-        raise NotImplementedError('Need to implement for Task 1.4')
-
-
-def derivative_check(f, *scalars):
+def derivative_check(f: Any, *scalars: Scalar) -> None:
     """
     Checks that autodiff works on a python function.
     Asserts False if derivative is incorrect.
 
     Parameters:
-        f (function) : function from n-scalars to 1-scalar.
-        *scalars (list of :class:`Scalar`) : n input scalar values.
+        f : function from n-scalars to 1-scalar.
+        *scalars  : n input scalar values.
     """
-    for x in scalars:
-        x.requires_grad_(True)
     out = f(*scalars)
     out.backward()
 
-    vals = [v for v in scalars]
     err_msg = """
 Derivative check at arguments f(%s) and received derivative f'=%f for argument %d,
 but was expecting derivative f'=%f from central difference."""
     for i, x in enumerate(scalars):
-        check = central_difference(f, *vals, arg=i)
+        check = central_difference(f, *scalars, arg=i)
         print(str([x.data for x in scalars]), x.derivative, i, check)
+        assert x.derivative is not None
         np.testing.assert_allclose(
             x.derivative,
             check.data,

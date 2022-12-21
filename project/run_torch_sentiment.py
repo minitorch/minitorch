@@ -1,9 +1,10 @@
 # Inspired by https://github.com/cezannec/CNN_Text_Classification/blob/master/CNN_Text_Classification.ipynb
+import embeddings
 import torch
 import torch.nn as nn
-from datasets import load_dataset
-import embeddings
 from run_sentiment import encode_sentiment_data
+
+from datasets import load_dataset
 
 
 class SentimentCNN(nn.Module):

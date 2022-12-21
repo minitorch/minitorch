@@ -1,7 +1,8 @@
-from mnist import MNIST
-import minitorch
-import visdom
 import numpy
+import visdom
+from mnist import MNIST
+
+import minitorch
 
 vis = visdom.Visdom()
 mndata = MNIST("data/")

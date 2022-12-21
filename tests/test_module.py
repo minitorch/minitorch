@@ -1,6 +1,8 @@
-import minitorch
 import pytest
 from hypothesis import given
+
+import minitorch
+
 from .strategies import med_ints, small_floats
 
 # # Tests for module.py
@@ -14,7 +16,7 @@ from .strategies import med_ints, small_floats
 
 
 class ModuleA1(minitorch.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.p1 = minitorch.Parameter(5)
         self.non_param = 10
@@ -23,25 +25,25 @@ class ModuleA1(minitorch.Module):
 
 
 class ModuleA2(minitorch.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.p2 = minitorch.Parameter(10)
 
 
 class ModuleA3(minitorch.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.c = ModuleA4()
 
 
 class ModuleA4(minitorch.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.p3 = minitorch.Parameter(15)
 
 
 @pytest.mark.task0_4
-def test_stacked_demo():
+def test_stacked_demo() -> None:
     "Check that each of the properties match"
     mod = ModuleA1()
     np = dict(mod.named_parameters())
@@ -61,12 +63,12 @@ def test_stacked_demo():
 # These tests generate a stack of modules of varying sizes to check
 # properties.
 
-VAL_A = 50
-VAL_B = 100
+VAL_A = 50.0
+VAL_B = 100.0
 
 
 class Module1(minitorch.Module):
-    def __init__(self, size_a, size_b, val):
+    def __init__(self, size_a: int, size_b: int, val: float) -> None:
         super().__init__()
         self.module_a = Module2(size_a)
         self.module_b = Module2(size_b)
@@ -74,25 +76,25 @@ class Module1(minitorch.Module):
 
 
 class Module2(minitorch.Module):
-    def __init__(self, extra=0):
+    def __init__(self, extra: int = 0) -> None:
         super().__init__()
         self.parameter_a = minitorch.Parameter(VAL_A)
         self.parameter_b = minitorch.Parameter(VAL_B)
         self.non_parameter = 10
         self.module_c = Module3()
         for i in range(extra):
-            self.add_parameter(f"extra_parameter_{i}", None)
+            self.add_parameter(f"extra_parameter_{i}", 0)
 
 
 class Module3(minitorch.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.parameter_a = minitorch.Parameter(VAL_A)
 
 
 @pytest.mark.task0_4
 @given(med_ints, med_ints)
-def test_module(size_a, size_b):
+def test_module(size_a: int, size_b: int) -> None:
     "Check the properties of a single module"
     module = Module2()
     module.eval()
@@ -108,12 +110,12 @@ def test_module(size_a, size_b):
     named_parameters = dict(module.named_parameters())
     assert named_parameters["parameter_a"].value == VAL_A
     assert named_parameters["parameter_b"].value == VAL_B
-    assert named_parameters["extra_parameter_0"].value is None
+    assert named_parameters["extra_parameter_0"].value == 0
 
 
 @pytest.mark.task0_4
 @given(med_ints, med_ints, small_floats)
-def test_stacked_module(size_a, size_b, val):
+def test_stacked_module(size_a: int, size_b: int, val: float) -> None:
     "Check the properties of a stacked module"
     module = Module1(size_a, size_b, val)
     module.eval()
@@ -141,19 +143,19 @@ def test_stacked_module(size_a, size_b, val):
 
 
 class ModuleRun(minitorch.Module):
-    def forward(self):
+    def forward(self) -> int:
         return 10
 
 
 @pytest.mark.task0_4
 @pytest.mark.xfail
-def test_module_fail_forward():
+def test_module_fail_forward() -> None:
     mod = minitorch.Module()
     mod()
 
 
 @pytest.mark.task0_4
-def test_module_forward():
+def test_module_forward() -> None:
     mod = ModuleRun()
     assert mod.forward() == 10
 
@@ -165,14 +167,14 @@ def test_module_forward():
 
 
 class MockParam:
-    def __init__(self):
+    def __init__(self) -> None:
         self.x = False
 
-    def requires_grad_(self, x):
+    def requires_grad_(self, x: bool) -> None:
         self.x = x
 
 
-def test_parameter():
+def test_parameter() -> None:
     t = MockParam()
     q = minitorch.Parameter(t)
     print(q)

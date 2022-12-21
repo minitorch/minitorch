@@ -1,8 +1,11 @@
-import minitorch
-from hypothesis import given
-from hypothesis.strategies import data
-from .strategies import tensor_data, indices
 import pytest
+from hypothesis import given
+from hypothesis.strategies import DataObject, data
+
+import minitorch
+from minitorch import TensorData
+
+from .tensor_strategies import indices, tensor_data
 
 # ## Tasks 2.1
 
@@ -10,7 +13,7 @@ import pytest
 
 
 @pytest.mark.task2_1
-def test_layout():
+def test_layout() -> None:
     "Test basis properties of layout and strides"
     data = [0] * 3 * 5
     tensor_data = minitorch.TensorData(data, (3, 5), (5, 1))
@@ -30,7 +33,7 @@ def test_layout():
 
 
 @pytest.mark.xfail
-def test_layout_bad():
+def test_layout_bad() -> None:
     "Test basis properties of layout and strides"
     data = [0] * 3 * 5
     minitorch.TensorData(data, (3, 5), (6,))
@@ -38,7 +41,7 @@ def test_layout_bad():
 
 @pytest.mark.task2_1
 @given(tensor_data())
-def test_enumeration(tensor_data):
+def test_enumeration(tensor_data: TensorData) -> None:
     "Test enumeration of tensor_datas."
     indices = list(tensor_data.indices())
 
@@ -56,7 +59,7 @@ def test_enumeration(tensor_data):
 
 @pytest.mark.task2_1
 @given(tensor_data())
-def test_index(tensor_data):
+def test_index(tensor_data: TensorData) -> None:
     "Test enumeration of tensor_data."
     # Check that all indices are within the size.
     for ind in tensor_data.indices():
@@ -76,7 +79,7 @@ def test_index(tensor_data):
 
 @pytest.mark.task2_1
 @given(data())
-def test_permute(data):
+def test_permute(data: DataObject) -> None:
     td = data.draw(tensor_data())
     ind = data.draw(indices(td))
     td_rev = td.permute(*list(reversed(range(td.dims))))
@@ -92,7 +95,7 @@ def test_permute(data):
 
 
 @pytest.mark.task2_2
-def test_shape_broadcast():
+def test_shape_broadcast() -> None:
     c = minitorch.shape_broadcast((1,), (5, 5))
     assert c == (5, 5)
 
@@ -118,5 +121,5 @@ def test_shape_broadcast():
 
 
 @given(tensor_data())
-def test_string(tensor_data):
+def test_string(tensor_data: TensorData) -> None:
     tensor_data.to_string()
