@@ -108,7 +108,10 @@ def test_sigmoid(a: float) -> None:
     * It is  strictly increasing.
     """
     # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    assert 0.0 <= sigmoid(a) <= 1.0
+    assert sigmoid(-a) == 1 - sigmoid(a)
+    assert sigmoid(a) < sigmoid(a + 1)
+    assert sigmoid(0) == 0.5
 
 
 @pytest.mark.task0_2
@@ -116,7 +119,7 @@ def test_sigmoid(a: float) -> None:
 def test_transitive(a: float, b: float, c: float) -> None:
     "Test the transitive property of less-than (a < b and b < c implies a < c)"
     # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    assert lt(a, c) == 1.0 if (lt(a, b) == 1.0 and lt(b, c) == 1.0) else 0.0 
 
 
 @pytest.mark.task0_2
@@ -126,7 +129,7 @@ def test_symmetric() -> None:
     gives the same value regardless of the order of its input.
     """
     # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    assert mul(2, 3) == mul(3, 2)
 
 
 @pytest.mark.task0_2
@@ -136,7 +139,7 @@ def test_distribute() -> None:
     :math:`z \times (x + y) = z \times x + z \times y`
     """
     # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    assert mul(2, add(3, 4)) == add(mul(2, 3), mul(2, 4))
 
 
 @pytest.mark.task0_2
@@ -145,7 +148,8 @@ def test_other() -> None:
     Write a test that ensures some other property holds for your functions.
     """
     # TODO: Implement for Task 0.2.
-    raise NotImplementedError('Need to implement for Task 0.2')
+    assert mul(2, 3) == 6
+    assert mul(2, 3) != 7
 
 
 # ## Task 0.3  - Higher-order functions
