@@ -21,6 +21,7 @@ def id(x: float) -> float:
     # TODO: Implement for Task 0.1.
     return x
 
+
 def add(x: float, y: float) -> float:
     "$f(x, y) = x + y$"
     # TODO: Implement for Task 0.1.
@@ -70,8 +71,8 @@ def sigmoid(x: float) -> float:
     for stability.
     """
     # TODO: Implement for Task 0.1.
-    numerator = 1.0 if x >=0 else exp(x)
-    denominator = 1.0 + exp(-x) if x >= 0 else 1.0 + exp(x) 
+    numerator = 1.0 if x >= 0 else exp(x)
+    denominator = 1.0 + exp(-x) if x >= 0 else 1.0 + exp(x)
     return numerator / denominator
 
 
@@ -107,7 +108,7 @@ def log_back(x: float, d: float) -> float:
 def inv(x: float) -> float:
     "$f(x) = 1/x$"
     # TODO: Implement for Task 0.1.
-    return 1/x
+    return 1 / x
 
 
 def inv_back(x: float, d: float) -> float:
