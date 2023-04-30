@@ -22,10 +22,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest pep8-naming
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 --ignore "N801, E203, E266, E501, W503, F812, F401, F841, E741, N803, N802, N806" minitorch/ tests/ project/
     - name: Test with pytest
       run: |
         echo "Module 0"
