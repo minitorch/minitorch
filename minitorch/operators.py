@@ -143,13 +143,16 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
          new list
     """
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    def map_fn(ls: Iterable[float]) -> Iterable[float]:
+        new_ls = [fn(x) for x in ls]
+        return new_ls
+    return map_fn
 
 
 def negList(ls: Iterable[float]) -> Iterable[float]:
     "Use `map` and `neg` to negate each element in `ls`"
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    return map(neg)(ls)
 
 
 def zipWith(
@@ -169,13 +172,17 @@ def zipWith(
 
     """
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    def zip_fn(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
+        assert len(ls1) == len(ls2)
+        new_ls = [fn(ls1[i], ls2[i]) for i in range(len(ls1))]
+        return new_ls
+    return zip_fn
 
 
 def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
     "Add the elements of `ls1` and `ls2` using `zipWith` and `add`"
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    return zipWith(add)(ls1, ls2)
 
 
 def reduce(
@@ -194,16 +201,21 @@ def reduce(
          fn(x_1, x_0)))`
     """
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    def reduce_fn(ls: Iterable[float]) -> float:
+        val = start
+        for i in range(len(ls)):
+            val = fn(val, ls[i])
+        return val
+    return reduce_fn
 
 
 def sum(ls: Iterable[float]) -> float:
     "Sum up a list using `reduce` and `add`."
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    return reduce(add, 0.0)(ls)
 
 
 def prod(ls: Iterable[float]) -> float:
     "Product of a list using `reduce` and `mul`."
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError('Need to implement for Task 0.3')
+    return reduce(mul, 1.0)(ls)
