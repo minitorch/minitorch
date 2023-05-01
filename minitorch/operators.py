@@ -13,25 +13,25 @@ from typing import Callable, Iterable
 def mul(x: float, y: float) -> float:
     "$f(x, y) = x * y$"
     # TODO: Implement for Task 0.1.
-    return x * y
+    return float(x * y)
 
 
 def id(x: float) -> float:
     "$f(x) = x$"
     # TODO: Implement for Task 0.1.
-    return x
+    return float(x)
 
 
 def add(x: float, y: float) -> float:
     "$f(x, y) = x + y$"
     # TODO: Implement for Task 0.1.
-    return x + y
+    return float(x + y)
 
 
 def neg(x: float) -> float:
     "$f(x) = -x$"
     # TODO: Implement for Task 0.1.
-    return -x
+    return float(-x)
 
 
 def lt(x: float, y: float) -> float:
@@ -49,13 +49,13 @@ def eq(x: float, y: float) -> float:
 def max(x: float, y: float) -> float:
     "$f(x) =$ x if x is greater than y else y"
     # TODO: Implement for Task 0.1.
-    return x if x > y else y
+    return float(x if x > y else y)
 
 
 def is_close(x: float, y: float) -> float:
     "$f(x) = |x - y| < 1e-2$"
     # TODO: Implement for Task 0.1.
-    return abs(x - y) < 1e-2
+    return float(abs(x - y) < 1e-2)
 
 
 def sigmoid(x: float) -> float:
@@ -71,9 +71,9 @@ def sigmoid(x: float) -> float:
     for stability.
     """
     # TODO: Implement for Task 0.1.
-    numerator = 1.0 if x >= 0 else exp(x)
-    denominator = 1.0 + exp(-x) if x >= 0 else 1.0 + exp(x)
-    return numerator / denominator
+    numerator = 1.0 if x >= 0.0 else exp(x)
+    denominator = 1.0 + exp(-x) if x >= 0.0 else 1.0 + exp(x)
+    return float(numerator / denominator)
 
 
 def relu(x: float) -> float:
@@ -83,7 +83,7 @@ def relu(x: float) -> float:
     (See https://en.wikipedia.org/wiki/Rectifier_(neural_networks) .)
     """
     # TODO: Implement for Task 0.1.
-    return max(x, 0)
+    return max(x, 0.0)
 
 
 EPS = 1e-6
@@ -91,12 +91,12 @@ EPS = 1e-6
 
 def log(x: float) -> float:
     "$f(x) = log(x)$"
-    return math.log(x + EPS)
+    return float(math.log(x + EPS))
 
 
 def exp(x: float) -> float:
     "$f(x) = e^{x}$"
-    return math.exp(x)
+    return float(math.exp(x))
 
 
 def log_back(x: float, d: float) -> float:
@@ -108,7 +108,7 @@ def log_back(x: float, d: float) -> float:
 def inv(x: float) -> float:
     "$f(x) = 1/x$"
     # TODO: Implement for Task 0.1.
-    return 1 / x
+    return float(1 / x)
 
 
 def inv_back(x: float, d: float) -> float:
