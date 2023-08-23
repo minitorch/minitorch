@@ -31,19 +31,19 @@ def add(x: float, y: float) -> float:
 def neg(x: float) -> float:
     "$f(x) = -x$"
     # TODO: Implement for Task 0.1.
-    return -x
+    return -1.0 * x
 
 
 def lt(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is less than y else 0.0"
     # TODO: Implement for Task 0.1.
-    return 1 if x < y else 0
+    return 1.0 if x < y else 0.0
 
 
 def eq(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is equal to y else 0.0"
     # TODO: Implement for Task 0.1.
-    return 1 if x == y else 0
+    return 1.0 if x == y else 0.0
 
 
 def max(x: float, y: float) -> float:
@@ -55,7 +55,7 @@ def max(x: float, y: float) -> float:
 def is_close(x: float, y: float) -> float:
     "$f(x) = |x - y| < 1e-2$"
     # TODO: Implement for Task 0.1.
-    return 1 if abs(x - y) < 1e-2 else 0
+    return 1.0 if abs(x - y) < 1e-2 else 0.0
 
 
 def sigmoid(x: float) -> float:
@@ -74,6 +74,7 @@ def sigmoid(x: float) -> float:
     return 1 / (1 + math.exp(-x)) if x >= 0 else math.exp(x) / (1 + math.exp(x))
 
 
+
 def relu(x: float) -> float:
     """
     $f(x) =$ x if x is greater than 0, else 0
@@ -81,7 +82,7 @@ def relu(x: float) -> float:
     (See https://en.wikipedia.org/wiki/Rectifier_(neural_networks) .)
     """
     # TODO: Implement for Task 0.1.
-    return x if x > 0 else 0
+    return x if x > 0 else 0.0
 
 
 EPS = 1e-6
@@ -100,13 +101,18 @@ def exp(x: float) -> float:
 def log_back(x: float, d: float) -> float:
     r"If $f = log$ as above, compute $d \times f'(x)$"
     # TODO: Implement for Task 0.1.
-    return mul(d, log(x))
+    return mul(d, 1.0 / x)
+
+def sigmoid_back(x: float, d: float) -> float:
+    r"If $f = sigmoid$ as above, compute $d \times f'(x)$"
+    # Implement for task1_1
+    return mul(d, math.exp(-x)/(1 + math.exp(-x))**2) if x > 0 else mul(d, math.exp(x)/(1 + math.exp(x))**2)
 
 
 def inv(x: float) -> float:
     "$f(x) = 1/x$"
     # TODO: Implement for Task 0.1.
-    return 1 / x
+    return 1.0 / x
 
 
 def inv_back(x: float, d: float) -> float:
@@ -194,7 +200,7 @@ def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
 def reduce(
     fn: Callable[[float, float], float], start: float
 ) -> Callable[[Iterable[float]], float]:
-    """
+    r"""
     Higher-order reduce.
 
     Args:
