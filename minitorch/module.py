@@ -37,7 +37,6 @@ class Module:
             for key in self._modules:
                 self._modules[key].train()
 
-
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
         # TODO: Implement for Task 0.4.
@@ -64,7 +63,7 @@ class Module:
                 for child_ret in child_rets:
                     ret.append((key + '.' + child_ret[0], child_ret[1]))
         return ret
-        
+
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
         # TODO: Implement for Task 0.4.

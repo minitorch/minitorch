@@ -113,6 +113,7 @@ def test_sigmoid(a: float) -> None:
     assert sigmoid(0.0) == 0.5
     assert sigmoid(a + 1) > sigmoid(a)
 
+
 @pytest.mark.task0_2
 @given(small_floats, small_floats, small_floats)
 def test_transitive(a: float, b: float, c: float) -> None:

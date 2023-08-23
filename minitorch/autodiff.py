@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Iterable, List, Tuple
+from typing import Any, Iterable, Tuple
 
 from typing_extensions import Protocol
 
@@ -25,11 +25,11 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
     # TODO: Implement for Task 1.1.
     perturbed_vals_x1 = list(vals)
     perturbed_vals_x2 = list(vals)
-    
+
     perturbed_vals_x1[arg] += epsilon
     perturbed_vals_x2[arg] -= epsilon
 
-    return (f(*perturbed_vals_x1) - f(*perturbed_vals_x2))/(2 * epsilon)
+    return (f(*perturbed_vals_x1) - f(*perturbed_vals_x2)) / (2 * epsilon)
 
 
 variable_count = 1
@@ -69,11 +69,11 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     """
     # TODO: Implement for Task 1.4.
     temp = variable
-    rt =[]
-    while(temp.is_leaf()):
+    rt = []
+    while (temp.is_leaf()):
         if not temp.is_constant():
             rt.append(temp)
-        temp = variable.parents()[-1] 
+        temp = variable.parents()[-1]
     return rt
 
 
@@ -94,7 +94,8 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
         if variable_item.is_leaf():
             variable_item.accumulate_derivative(deriv_item)
         if variable_item.history.last_fn :
-            variable_item.backward(d_output = deriv_item)
+            variable_item.backward(d_output=deriv_item)
+
 
 @dataclass
 class Context:

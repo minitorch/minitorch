@@ -74,7 +74,6 @@ def sigmoid(x: float) -> float:
     return 1 / (1 + math.exp(-x)) if x >= 0 else math.exp(x) / (1 + math.exp(x))
 
 
-
 def relu(x: float) -> float:
     """
     $f(x) =$ x if x is greater than 0, else 0
@@ -103,10 +102,11 @@ def log_back(x: float, d: float) -> float:
     # TODO: Implement for Task 0.1.
     return mul(d, 1.0 / x)
 
+
 def sigmoid_back(x: float, d: float) -> float:
     r"If $f = sigmoid$ as above, compute $d \times f'(x)$"
     # Implement for task1_1
-    return mul(d, math.exp(-x)/(1 + math.exp(-x))**2) if x > 0 else mul(d, math.exp(x)/(1 + math.exp(x))**2)
+    return mul(d, math.exp(-x) / (1 + math.exp(-x))**2) if x > 0 else mul(d, math.exp(x) / (1 + math.exp(x))**2)
 
 
 def inv(x: float) -> float:

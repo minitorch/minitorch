@@ -5,7 +5,6 @@ from chalk import (
     Trail,
     empty,
     make_path,
-    path,
     place_on_path,
     rectangle,
     unit_x,
