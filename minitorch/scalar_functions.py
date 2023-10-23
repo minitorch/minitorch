@@ -54,6 +54,7 @@ class ScalarFunction:
                 raw_vals.append(v.data)
             else:
                 scalars.append(minitorch.scalar.Scalar(v))
+                scalars[-1].history = None
                 raw_vals.append(v)
 
         # Create the context.
