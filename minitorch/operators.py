@@ -106,7 +106,7 @@ def inv(x: float) -> float:
 
 def inv_back(x: float, d: float) -> float:
     r"If $f(x) = 1/x$ compute $d \times f'(x)$"
-    return d * -1 / x ** 2
+    return d * -1 / x**2
 
 
 def relu_back(x: float, d: float) -> float:
@@ -182,12 +182,13 @@ def reduce(
          $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2,
          fn(x_1, x_0)))`
     """
+
     def inner(ls: Iterable[float]):
         final = start
         for x in ls:
             final = fn(final, x)
         return final
-    
+
     return inner
 
 

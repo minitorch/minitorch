@@ -108,16 +108,16 @@ def test_sigmoid(a: float) -> None:
     * It is  strictly increasing.
     """
     assert 0 <= sigmoid(a) <= 1
-    assert_close(1-sigmoid(a), sigmoid(-a))
+    assert_close(1 - sigmoid(a), sigmoid(-a))
     assert sigmoid(0) == 0.5
-    assert sigmoid(a-1) <= sigmoid(a)
+    assert sigmoid(a - 1) <= sigmoid(a)
 
 
 @pytest.mark.task0_2
 @given(small_floats, small_floats, small_floats)
 def test_transitive(a: float, b: float, c: float) -> None:
     "Test the transitive property of less-than (a < b and b < c implies a < c)"
-    if lt(a, b) and lt (b, c):
+    if lt(a, b) and lt(b, c):
         assert lt(a, c)
 
 

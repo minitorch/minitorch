@@ -53,9 +53,7 @@ class Module:
         for module_name, module in self._modules.items():
             module_params = module.named_parameters()
             for name, param in module_params:
-                params.append(
-                    (module_name + "." + name, param)
-                )
+                params.append((module_name + "." + name, param))
         return params
 
     def parameters(self) -> Sequence[Parameter]:
