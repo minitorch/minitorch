@@ -43,8 +43,7 @@ def lt(x: float, y: float) -> float:
 def eq(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is equal to y else 0.0"
     # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
-
+    return float(x == y)
 
 
 def max(x: float, y: float) -> float:
