@@ -84,7 +84,7 @@ def relu(x: float) -> float:
     (See https://en.wikipedia.org/wiki/Rectifier_(neural_networks) .)
     """
     # TODO: Implement for Task 0.1.
-    raise NotImplementedError('Need to implement for Task 0.1')
+    return x if x > 0. else 0
 
 
 EPS = 1e-6
@@ -122,7 +122,7 @@ def inv_back(x: float, d: float) -> float:
 def relu_back(x: float, d: float) -> float:
     r"If $f = relu$ compute $d \times f'(x)$"
     # TODO: Implement for Task 0.1.
-    raise NotImplementedError('Need to implement for Task 0.1')
+    return d * (x > 0.)
 
 
 # ## Task 0.3
