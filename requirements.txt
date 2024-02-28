@@ -8,3 +8,5 @@ pytest == 7.1.2
 pytest-env
 pytest-runner == 5.2
 typing_extensions
+colour==0.1.5
+chalk-diagrams @ git+https://github.com/chalk-diagrams/chalk
