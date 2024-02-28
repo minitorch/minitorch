@@ -2,6 +2,7 @@
 Be sure you have minitorch installed in you Virtual Env.
 >>> pip install -Ue .
 """
+
 import random
 
 import minitorch

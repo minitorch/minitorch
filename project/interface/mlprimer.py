@@ -12,7 +12,6 @@ from chalk import (
     unit_y,
 )
 from colour import Color
-from drawing import aqua, black, lightblue, lightred
 
 import minitorch
 
@@ -44,11 +43,16 @@ def circle_mark():
         ch.Trail.circle(2).centered().to_path()
         + ch.Trail.circle(1.0, False).centered().to_path()
     )
-    return d.stroke().fill_color(aqua).line_width(0.2).scale_uniform_to_x(0.1)
+    return d.stroke().fill_color(Color("acqua")).line_width(0.2).scale_uniform_to_x(0.1)
 
 
 def origin():
-    return ch.rectangle(1, 1).translate(0.5, -0.5).fill_color(white).line_color(white)
+    return (
+        ch.rectangle(1, 1)
+        .translate(0.5, -0.5)
+        .fill_color(Color("white"))
+        .line_color(Color("white"))
+    )
 
 
 def axes():
@@ -78,7 +82,10 @@ def d_mark():
         True,
     )
     return (
-        t.rotate_by(0.25 / 2).line_width(0.2).scale_uniform_to_x(0.1).fill_color(blue)
+        t.rotate_by(0.25 / 2)
+        .line_width(0.2)
+        .scale_uniform_to_x(0.1)
+        .fill_color(Color("blue"))
     )
 
 
@@ -117,7 +124,7 @@ def x_mark():
 
 
 def points(m, pts):
-    return place_on_path([m] * len(pts), Path.from_list_of_tuples(pts).reflect_y())
+    return place_on_path([m] * len(pts), path.from_list_of_tuples(pts).reflect_y())
 
 
 def draw_below(fn):
@@ -153,7 +160,7 @@ def quad(fn, c1, c2):
     return q(P2(0, 0), 1)
 
 
-def draw_graph(f, c1=lightred, c2=lightblue):
+def draw_graph(f, c1=Color("red"), c2=Color("lightblue")):
     return quad(lambda x1, x2: f.forward(x1, x2) > 0, c1, c2).reflect_y() + axes()
 
 
@@ -161,7 +168,7 @@ def compare(m1, m2):
     return (
         draw_graph(m1).center_xy()
         | hstrut(0.5)
-        | text("→", 0.5).fill_color(black)
+        | text("→", 0.5).fill_color(Color("black"))
         | hstrut(0.5)
         | draw_graph(m2).center_xy()
     )
@@ -214,7 +221,7 @@ def show_loss(full_loss):
         path.append(pt)
         if j % 5 == 0:
             d = d | hstrut(0.5) | show(m).named(("graph", i))
-            p = circle(0.01).translate(pt[0], pt[1]).fill_color(black)
+            p = circle(0.01).translate(pt[0], pt[1]).fill_color(Color("black"))
             p = p.named(("x", i))
             i += 1
             scores.append(p)
