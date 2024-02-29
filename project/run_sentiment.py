@@ -105,7 +105,7 @@ def get_predictions_array(y_true, model_output):
 
 def get_accuracy(predictions_array):
     correct = 0
-    for (y_true, y_pred, logit) in predictions_array:
+    for y_true, y_pred, logit in predictions_array:
         if y_true == y_pred:
             correct += 1
     return correct / len(predictions_array)
