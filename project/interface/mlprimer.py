@@ -1,11 +1,11 @@
 import random
 
 import chalk as ch
+from chalk import path  # noqa: F401
 from chalk import (
     Trail,
     empty,
     make_path,
-    path,
     place_on_path,
     rectangle,
     unit_x,

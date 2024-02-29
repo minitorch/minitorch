@@ -1,13 +1,12 @@
 from typing import Tuple
 
-import numpy as np
-from numba import njit, prange
+import numpy as np  # noqa: F401
+from numba import njit, prange  # noqa: F401
 
 from .autodiff import Context
 from .tensor import Tensor
+from .tensor_data import MAX_DIMS, Index  # noqa: F401
 from .tensor_data import (
-    MAX_DIMS,
-    Index,
     Shape,
     Strides,
     broadcast_index,
