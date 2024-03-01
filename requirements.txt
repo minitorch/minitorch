@@ -1,10 +1,12 @@
 colorama==0.4.3
-hypothesis == 6.54
-mypy == 0.971
-numba == 0.56
-numpy == 1.22
-pre-commit == 2.20.0
-pytest == 7.1.2
+hypothesis==6.54
+mypy==0.971
+numba==0.56
+numpy==1.22
+pre-commit==2.20.0
+pytest==7.1.2
 pytest-env
-pytest-runner == 5.2
+pytest-runner==5.2
 typing_extensions
+colour==0.1.5
+chalk-diagrams @ git+https://github.com/chalk-diagrams/chalk

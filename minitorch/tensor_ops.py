@@ -2,26 +2,29 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Optional, Type
 
-import numpy as np
+import numpy as np  # noqa: F401
 from typing_extensions import Protocol
 
 from . import operators
+from .tensor_data import MAX_DIMS  # noqa: F401
+from .tensor_data import broadcast_index  # noqa: F401
+from .tensor_data import index_to_position  # noqa: F401
+from .tensor_data import to_index  # noqa: F401
 from .tensor_data import (
-    MAX_DIMS,
-    broadcast_index,
-    index_to_position,
     shape_broadcast,
-    to_index,
 )
 
 if TYPE_CHECKING:
     from .tensor import Tensor
-    from .tensor_data import Index, Shape, Storage, Strides
+    from .tensor_data import Index  # noqa: F401
+    from .tensor_data import Shape, Storage, Strides
 
 
+# fmt: off
 class MapProto(Protocol):
     def __call__(self, x: Tensor, out: Optional[Tensor] = ..., /) -> Tensor:
         ...
+# fmt: on
 
 
 class TensorOps:
@@ -265,7 +268,7 @@ def tensor_map(
         in_strides: Strides,
     ) -> None:
         # TODO: Implement for Task 2.3.
-        raise NotImplementedError('Need to implement for Task 2.3')
+        raise NotImplementedError("Need to implement for Task 2.3")
 
     return _map
 
@@ -310,7 +313,7 @@ def tensor_zip(
         b_strides: Strides,
     ) -> None:
         # TODO: Implement for Task 2.3.
-        raise NotImplementedError('Need to implement for Task 2.3')
+        raise NotImplementedError("Need to implement for Task 2.3")
 
     return _zip
 
@@ -341,7 +344,7 @@ def tensor_reduce(
         reduce_dim: int,
     ) -> None:
         # TODO: Implement for Task 2.3.
-        raise NotImplementedError('Need to implement for Task 2.3')
+        raise NotImplementedError("Need to implement for Task 2.3")
 
     return _reduce
 

@@ -1,13 +1,12 @@
 from typing import Tuple
 
-import numpy as np
-from numba import njit, prange
+import numpy as np  # noqa: F401
+from numba import njit, prange  # noqa: F401
 
 from .autodiff import Context
 from .tensor import Tensor
+from .tensor_data import MAX_DIMS, Index  # noqa: F401
 from .tensor_data import (
-    MAX_DIMS,
-    Index,
     Shape,
     Strides,
     broadcast_index,
@@ -77,11 +76,11 @@ def _tensor_conv1d(
         and in_channels == in_channels_
         and out_channels == out_channels_
     )
-    s1 = input_strides
-    s2 = weight_strides
+    s1 = input_strides  # noqa: F841
+    s2 = weight_strides  # noqa: F841
 
     # TODO: Implement for Task 4.1.
-    raise NotImplementedError('Need to implement for Task 4.1')
+    raise NotImplementedError("Need to implement for Task 4.1")
 
 
 tensor_conv1d = njit(parallel=True)(_tensor_conv1d)
@@ -203,11 +202,11 @@ def _tensor_conv2d(
     s1 = input_strides
     s2 = weight_strides
     # inners
-    s10, s11, s12, s13 = s1[0], s1[1], s1[2], s1[3]
-    s20, s21, s22, s23 = s2[0], s2[1], s2[2], s2[3]
+    s10, s11, s12, s13 = s1[0], s1[1], s1[2], s1[3]  # noqa: F841
+    s20, s21, s22, s23 = s2[0], s2[1], s2[2], s2[3]  # noqa: F841
 
     # TODO: Implement for Task 4.2.
-    raise NotImplementedError('Need to implement for Task 4.2')
+    raise NotImplementedError("Need to implement for Task 4.2")
 
 
 tensor_conv2d = njit(parallel=True, fastmath=True)(_tensor_conv2d)

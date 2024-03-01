@@ -1,18 +1,17 @@
 import random
 
 import chalk as ch
+from chalk import path  # noqa: F401
 from chalk import (
     Trail,
     empty,
     make_path,
-    path,
     place_on_path,
     rectangle,
     unit_x,
     unit_y,
 )
 from colour import Color
-from drawing import aqua, black, lightblue, lightred
 
 import minitorch
 
@@ -44,11 +43,16 @@ def circle_mark():
         ch.Trail.circle(2).centered().to_path()
         + ch.Trail.circle(1.0, False).centered().to_path()
     )
-    return d.stroke().fill_color(aqua).line_width(0.2).scale_uniform_to_x(0.1)
+    return d.stroke().fill_color(Color("acqua")).line_width(0.2).scale_uniform_to_x(0.1)
 
 
 def origin():
-    return ch.rectangle(1, 1).translate(0.5, -0.5).fill_color(white).line_color(white)
+    return (
+        ch.rectangle(1, 1)
+        .translate(0.5, -0.5)
+        .fill_color(Color("white"))
+        .line_color(Color("white"))
+    )
 
 
 def axes():
@@ -78,7 +82,10 @@ def d_mark():
         True,
     )
     return (
-        t.rotate_by(0.25 / 2).line_width(0.2).scale_uniform_to_x(0.1).fill_color(blue)
+        t.rotate_by(0.25 / 2)
+        .line_width(0.2)
+        .scale_uniform_to_x(0.1)
+        .fill_color(Color("blue"))
     )
 
 
@@ -117,7 +124,7 @@ def x_mark():
 
 
 def points(m, pts):
-    return place_on_path([m] * len(pts), Path.from_list_of_tuples(pts).reflect_y())
+    return place_on_path([m] * len(pts), path.from_list_of_tuples(pts).reflect_y())
 
 
 def draw_below(fn):
@@ -150,19 +157,19 @@ def quad(fn, c1, c2):
                 q(tl + s * unit_y, s) | q(tl + s * (unit_y + unit_x), s)
             )
 
-    return q(P2(0, 0), 1)
+    return q(P2(0, 0), 1)  # noqa: F821
 
 
-def draw_graph(f, c1=lightred, c2=lightblue):
+def draw_graph(f, c1=Color("red"), c2=Color("lightblue")):
     return quad(lambda x1, x2: f.forward(x1, x2) > 0, c1, c2).reflect_y() + axes()
 
 
 def compare(m1, m2):
     return (
         draw_graph(m1).center_xy()
-        | hstrut(0.5)
-        | text("→", 0.5).fill_color(black)
-        | hstrut(0.5)
+        | hstrut(0.5)  # noqa: F821
+        | text("→", 0.5).fill_color(Color("black"))  # noqa: F821
+        | hstrut(0.5)  # noqa: F821
         | draw_graph(m2).center_xy()
     )
 
@@ -170,12 +177,12 @@ def compare(m1, m2):
 def with_points(pts1, pts2, b):
     "Draw a picture showing line to boundary"
     w1, w2 = 1, 1
-    model = Linear(w1, w2, b)
+    model = Linear(w1, w2, b)  # noqa: F821
     line = make_path([(0, b), (1, b + 1)])
     dia = draw_graph(model) + split_graph(pts1, pts2, False)
 
     for pt in pts1:
-        pt2 = line.get_trace().trace_p(P2(pt[0], -pt[1]), V2(-1, 1))
+        pt2 = line.get_trace().trace_p(P2(pt[0], -pt[1]), V2(-1, 1))  # noqa: F821
         if pt2:
             dia += make_path([(pt[0], -pt[1]), pt2]).dashing([5, 5], 0)
     return dia
@@ -209,22 +216,26 @@ def show_loss(full_loss):
     i = 0
     for j, b in enumerate(range(20)):
         b = -1.7 + b / 20
-        m = Linear(1, 1, b)
+        m = Linear(1, 1, b)  # noqa: F821
         pt = (b, full_loss(m))
         path.append(pt)
         if j % 5 == 0:
-            d = d | hstrut(0.5) | show(m).named(("graph", i))
-            p = circle(0.01).translate(pt[0], pt[1]).fill_color(black)
+            d = d | hstrut(0.5) | show(m).named(("graph", i))  # noqa: F821
+            p = (
+                circle(0.01)  # noqa: F821
+                .translate(pt[0], pt[1])
+                .fill_color(Color("black"))
+            )
             p = p.named(("x", i))
             i += 1
             scores.append(p)
     d = (
-        (concat(scores) + make_path(path)).center_xy().scale(3)
-        / vstrut(0.5)
+        (concat(scores) + make_path(path)).center_xy().scale(3)  # noqa: F821
+        / vstrut(0.5)  # noqa: F821
         / d.scale(2).center_xy()
     )
     for i in range(i):
-        d = d.connect(("graph", i), ("x", i), ArrowOpts(head_pad=0.1))
+        d = d.connect(("graph", i), ("x", i), ArrowOpts(head_pad=0.1))  # noqa: F821
     return d
 
 
