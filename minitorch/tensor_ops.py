@@ -20,8 +20,11 @@ if TYPE_CHECKING:
     from .tensor_data import Shape, Storage, Strides
 
 
+#  fmt: off
 class MapProto(Protocol):
-    def __call__(self, x: Tensor, out: Optional[Tensor] = ..., /) -> Tensor: ...
+    def __call__(self, x: Tensor, out: Optional[Tensor] = ..., /) -> Tensor:
+        ...
+#  fmt: on
 
 
 class TensorOps:
