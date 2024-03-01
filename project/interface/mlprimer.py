@@ -157,7 +157,7 @@ def quad(fn, c1, c2):
                 q(tl + s * unit_y, s) | q(tl + s * (unit_y + unit_x), s)
             )
 
-    return q(P2(0, 0), 1)
+    return q(P2(0, 0), 1)  # noqa: F821
 
 
 def draw_graph(f, c1=Color("red"), c2=Color("lightblue")):
@@ -167,9 +167,9 @@ def draw_graph(f, c1=Color("red"), c2=Color("lightblue")):
 def compare(m1, m2):
     return (
         draw_graph(m1).center_xy()
-        | hstrut(0.5)
-        | text("→", 0.5).fill_color(Color("black"))
-        | hstrut(0.5)
+        | hstrut(0.5)  # noqa: F821
+        | text("→", 0.5).fill_color(Color("black"))  # noqa: F821
+        | hstrut(0.5)  # noqa: F821
         | draw_graph(m2).center_xy()
     )
 
@@ -177,12 +177,12 @@ def compare(m1, m2):
 def with_points(pts1, pts2, b):
     "Draw a picture showing line to boundary"
     w1, w2 = 1, 1
-    model = Linear(w1, w2, b)
+    model = Linear(w1, w2, b)  # noqa: F821
     line = make_path([(0, b), (1, b + 1)])
     dia = draw_graph(model) + split_graph(pts1, pts2, False)
 
     for pt in pts1:
-        pt2 = line.get_trace().trace_p(P2(pt[0], -pt[1]), V2(-1, 1))
+        pt2 = line.get_trace().trace_p(P2(pt[0], -pt[1]), V2(-1, 1))  # noqa: F821
         if pt2:
             dia += make_path([(pt[0], -pt[1]), pt2]).dashing([5, 5], 0)
     return dia
@@ -216,22 +216,26 @@ def show_loss(full_loss):
     i = 0
     for j, b in enumerate(range(20)):
         b = -1.7 + b / 20
-        m = Linear(1, 1, b)
+        m = Linear(1, 1, b)  # noqa: F821
         pt = (b, full_loss(m))
         path.append(pt)
         if j % 5 == 0:
-            d = d | hstrut(0.5) | show(m).named(("graph", i))
-            p = circle(0.01).translate(pt[0], pt[1]).fill_color(Color("black"))
+            d = d | hstrut(0.5) | show(m).named(("graph", i))  # noqa: F821
+            p = (
+                circle(0.01)  # noqa: F821
+                .translate(pt[0], pt[1])
+                .fill_color(Color("black"))
+            )
             p = p.named(("x", i))
             i += 1
             scores.append(p)
     d = (
-        (concat(scores) + make_path(path)).center_xy().scale(3)
-        / vstrut(0.5)
+        (concat(scores) + make_path(path)).center_xy().scale(3)  # noqa: F821
+        / vstrut(0.5)  # noqa: F821
         / d.scale(2).center_xy()
     )
     for i in range(i):
-        d = d.connect(("graph", i), ("x", i), ArrowOpts(head_pad=0.1))
+        d = d.connect(("graph", i), ("x", i), ArrowOpts(head_pad=0.1))  # noqa: F821
     return d
 
 
