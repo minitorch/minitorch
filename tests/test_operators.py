@@ -5,6 +5,7 @@ from hypothesis import given
 from hypothesis.strategies import lists
 
 from minitorch import MathTest
+from minitorch.operators import sigmoid  # noqa: F401
 from minitorch.operators import (
     add,
     addLists,

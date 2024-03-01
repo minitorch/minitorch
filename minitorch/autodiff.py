@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Iterable, List, Tuple
+from typing import Any, Iterable, List, Tuple  # noqa: F401
 
 from typing_extensions import Protocol
 

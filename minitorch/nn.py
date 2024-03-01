@@ -4,7 +4,7 @@ from . import operators
 from .autodiff import Context
 from .fast_ops import FastOps
 from .tensor import Tensor
-from .tensor_functions import Function, rand, tensor
+from .tensor_functions import Function, rand, tensor  # noqa: F401
 
 
 def tile(input: Tensor, kernel: Tuple[int, int]) -> Tuple[Tensor, int, int]:
