@@ -323,7 +323,7 @@ class Tensor:
 
     def accumulate_derivative(self, x: Any) -> None:
         """
-        Add `val` to the the derivative accumulated on this variable.
+        Add `val` to the derivative accumulated on this variable.
         Should only be called during autodifferentiation on leaf variables.
 
         Args:

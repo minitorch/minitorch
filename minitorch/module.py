@@ -30,18 +30,18 @@ class Module:
         return list(m.values())
 
     def train(self) -> None:
-        "Set the mode of this module and all descendent modules to `train`."
+        "Set the mode of this module and all descendant modules to `train`."
         # TODO: Implement for Task 0.4.
         raise NotImplementedError('Need to implement for Task 0.4')
 
     def eval(self) -> None:
-        "Set the mode of this module and all descendent modules to `eval`."
+        "Set the mode of this module and all descendant modules to `eval`."
         # TODO: Implement for Task 0.4.
         raise NotImplementedError('Need to implement for Task 0.4')
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
-        Collect all the parameters of this module and its descendents.
+        Collect all the parameters of this module and its descendants.
 
 
         Returns:
@@ -51,7 +51,7 @@ class Module:
         raise NotImplementedError('Need to implement for Task 0.4')
 
     def parameters(self) -> Sequence[Parameter]:
-        "Enumerate over all the parameters of this module and its descendents."
+        "Enumerate over all the parameters of this module and its descendants."
         # TODO: Implement for Task 0.4.
         raise NotImplementedError('Need to implement for Task 0.4')
 
