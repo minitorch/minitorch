@@ -15,7 +15,7 @@ class MathTest(Generic[A]):
 
     @staticmethod
     def addConstant(a: A) -> A:
-        "Add contant to the argument"
+        "Add constant to the argument"
         return 5 + a
 
     @staticmethod

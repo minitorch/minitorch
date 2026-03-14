@@ -384,7 +384,7 @@ def _tensor_matrix_multiply(
     # 1) Move across shared dimension by block dim.
     #    a) Copy into shared memory for a matrix.
     #    b) Copy into shared memory for b matrix
-    #    c) Compute the dot produce for position c[i, j]
+    #    c) Compute the dot product for position c[i, j]
     # TODO: Implement for Task 3.4.
     raise NotImplementedError('Need to implement for Task 3.4')
 
