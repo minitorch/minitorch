@@ -24,7 +24,7 @@ def scalars(
     return minitorch.Scalar(val)
 
 
-small_scalars = scalars(min_value=-100, max_value=100)
+small_scalars = scalars(min_value=-100., max_value=100.)
 
 
 # ## Task 1.1 - Test central difference

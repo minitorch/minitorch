@@ -23,8 +23,12 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
         An approximation of $f'_i(x_0, \ldots, x_{n-1})$
     """
     # TODO: Implement for Task 1.1.
-    raise NotImplementedError('Need to implement for Task 1.1')
-
+    vals_plus_epsilon = [v + (epsilon if i == arg else 0) for i, v in enumerate(vals)]
+    vals_minus_epsilon = [v - (epsilon if i == arg else 0) for i, v in enumerate(vals)]
+    num = f(*vals_plus_epsilon) - f(*vals_minus_epsilon)
+    denom = 2 * epsilon
+    der = num / denom
+    return der
 
 variable_count = 1
 
@@ -61,8 +65,20 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+    visited = set()
+    post_order = []
+
+    def dfs(var: Variable):
+        if var.unique_id not in visited:
+            visited.add(var.unique_id)
+
+            if not var.is_constant():
+                for parent in var.parents:
+                    dfs(parent)
+                post_order.insert(0, var)
+
+    dfs(variable)
+    return post_order
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -76,8 +92,18 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
 
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
-    # TODO: Implement for Task 1.4.
-    raise NotImplementedError('Need to implement for Task 1.4')
+    topological_order = topological_sort(variable)
+    derivatives = {variable.unique_id: deriv}
+
+    for var in topological_order:
+        d_output = derivatives.get(var.unique_id, 0)
+
+        if var.is_leaf():
+            var.accumulate_derivative(d_output)
+        else:
+            for parent, local_grad in var.chain_rule(d_output):
+                derivatives[parent.unique_id] = derivatives.get(parent.unique_id, 0) + local_grad
+
 
 
 @dataclass
