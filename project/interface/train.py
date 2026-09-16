@@ -1,11 +1,11 @@
 import time
 
 import graph_builder
-import interface.plots as plots
 import networkx as nx
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+from interface import plots
 
 import minitorch
 
@@ -21,7 +21,7 @@ def render_train_interface(
     points = col2.slider("Number of points", min_value=1, max_value=150, value=50)
     selected_dataset = col1.selectbox("Select dataset", list(datasets_map.keys()))
 
-    @st.cache
+    @st.cache_data
     def get_dataset(selected_dataset, points):
         return datasets_map[selected_dataset](points)
 
@@ -29,7 +29,7 @@ def render_train_interface(
 
     fig = plots.plot_out(dataset)
     fig.update_layout(width=600, height=600)
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, key="dataset_plot")
 
     st.markdown("### Model")
     if hidden_layer:
@@ -39,7 +39,7 @@ def render_train_interface(
     else:
         hidden_layers = 0
 
-    @st.cache
+    @st.cache_data
     def get_train(hidden_layers):
         train = TrainCls(hidden_layers)
         one_output = train.run_one(dataset.X[0])
@@ -81,7 +81,7 @@ def render_train_interface(
         return fig
 
     st.markdown("### Initial setting")
-    st.write(plot())
+    st.plotly_chart(plot(), key="initial_model_plot")
 
     if hasattr(train, "train"):
         st.markdown("### Hyperparameters")
@@ -114,17 +114,12 @@ def render_train_interface(
             st_progress.progress(epoch / max_epochs)
             time_per_epoch = time_elapsed / (epoch + 1)
             st_epoch_timer.markdown(
-                "Epoch {}/{}. Time per epoch: {:,.3f}s. Time left: {:,.2f}s.".format(
-                    epoch,
-                    max_epochs,
-                    time_per_epoch,
-                    (max_epochs - epoch) * time_per_epoch,
-                )
+                f"Epoch {epoch}/{max_epochs}. Time per epoch: {time_per_epoch:,.3f}s. Time left: {(max_epochs - epoch) * time_per_epoch:,.2f}s."
             )
         df.append({"epoch": epoch, "loss": total_loss, "correct": correct})
         st_epoch_stats.write(pd.DataFrame(reversed(df)))
 
-        st_epoch_image.plotly_chart(plot())
+        st_epoch_image.plotly_chart(plot(), key="epoch_model_plot")
         if hasattr(train, "train"):
             loss_graph = go.Scatter(mode="lines", x=list(range(len(losses))), y=losses)
             fig = go.Figure(loss_graph)
@@ -133,7 +128,7 @@ def render_train_interface(
                 xaxis=dict(range=[0, max_epochs]),
                 yaxis=dict(range=[0, max(losses)]),
             )
-            st_epoch_plot.plotly_chart(fig)
+            st_epoch_plot.plotly_chart(fig, key="loss_plot")
 
             print(
                 f"Epoch: {epoch}/{max_epochs}, loss: {total_loss}, correct: {correct}"

@@ -1,10 +1,17 @@
 colorama==0.4.3
-hypothesis == 6.54
-mypy == 0.971
-numba == 0.56
-numpy == 1.22
-pre-commit == 2.20.0
-pytest == 7.1.2
+hypothesis>=6.168.0
+mypy==0.971
+networkx>=3.6.1
+numba>=0.67.0
+numpy==1.22
+plotly>=7.1.0
+pre-commit==2.20.0
+pydot>=4.0.1
+pytest>=9.1.1
 pytest-env
-pytest-runner == 5.2
+pytest-runner==5.2
+streamlit>=1.64.0
+streamlit-ace>=0.1.1
+torch>=2.14.0
+typing>=3.10.0.0
 typing_extensions
